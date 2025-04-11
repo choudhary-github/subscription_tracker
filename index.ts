@@ -11,7 +11,6 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(express.json());
-app.use(errorMiddleware)
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
@@ -26,6 +25,7 @@ apiRouter.use("/users", userRouter);
 apiRouter.use("/subscriptions", subscriptionRouter);
 
 app.use("/api/v1", apiRouter);
+app.use(errorMiddleware)
 
 app.listen(PORT, async () => {
   try {
