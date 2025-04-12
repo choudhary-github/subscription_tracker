@@ -1,7 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import User from "../models/user.model";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
@@ -19,8 +18,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
       throw error;
     }
 
-    const hash = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, hash);
+    const hashedPassword = await Bun.password.hash(password);
     const newUser = await User.create(
       [
         {
@@ -52,7 +50,41 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const signIn = async (req: Request, res: Response, next: NextFunction) => {};
+const signIn = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      const error: any = new Error("User not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const isMatch = await Bun.password.verify(password, user.password);
+
+    if (!isMatch) {
+      const error: any = new Error("Invalid credentials");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!);
+
+    res.status(200).json({
+      message: "User logged in successfully",
+      data: {
+        user: {
+          name: user.name,
+          email: user.email,
+        },
+        token,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const signOut = async (req: Request, res: Response, next: NextFunction) => {};
 

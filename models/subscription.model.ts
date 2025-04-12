@@ -81,9 +81,7 @@ subscriptionSchema.pre("save", function (this: any, next) {
     };
 
     this.renewalDate = new Date(this.startDate);
-    this.renewalDate.setDate(
-      this.renewalDate.getDate() + renewalPeriod[this.frequency]
-    );
+    this.renewalDate.setDate(this.renewalDate.getDate() + renewalPeriod[this.frequency]);
   }
   if (this.renewalDate < new Date()) {
     this.status = "expired";

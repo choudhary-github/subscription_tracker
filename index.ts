@@ -17,7 +17,7 @@ app.use(cookieParser());
 const apiRouter = Router();
 
 apiRouter.get("/", (req: Request, res: Response) => {
-  res.send("hello world");
+  res.send("hello world hello");
 });
 
 apiRouter.use("/auth", authRouter);
