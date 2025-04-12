@@ -75,6 +75,7 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
       message: "User logged in successfully",
       data: {
         user: {
+          userId: user._id,
           name: user.name,
           email: user.email,
         },
