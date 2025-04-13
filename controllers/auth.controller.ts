@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import User from "../models/user.model";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const session = await mongoose.startSession();
@@ -18,6 +19,8 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
       throw error;
     }
 
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(password, salt);
     const hashedPassword = await Bun.password.hash(password);
     const newUser = await User.create(
       [
@@ -61,6 +64,7 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
       throw error;
     }
 
+    // const isMatch = await bcrypt.compare(password, user.password);
     const isMatch = await Bun.password.verify(password, user.password);
 
     if (!isMatch) {

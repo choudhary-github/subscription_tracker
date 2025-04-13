@@ -3,6 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/bun": "latest",
     "@types/cookie-parser": "^1.4.8",
     "@types/dotenv": "^8.2.3",
@@ -17,6 +18,8 @@
   "dependencies": {
     "@arcjet/bun": "^1.0.0-beta.5",
     "@arcjet/inspect": "^1.0.0-beta.5",
+    "@arcjet/node": "^1.0.0-beta.5",
+    "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
