@@ -1,22 +1,22 @@
-import arcjet, { detectBot, shield, tokenBucket } from "@arcjet/bun";
-import { ARCJET_KEY } from "../config/env";
+import type { Request, Response, NextFunction } from "express";
+import aj from "../config/arcjet";
 
-const aj = arcjet({
-  key: ARCJET_KEY!,
-  characteristics: ["ip.src"],
-  rules: [
-    shield({ mode: "LIVE" }),
-    detectBot({
-      mode: "LIVE",
-      allow: ["CATEGORY:SEARCH_ENGINE"],
-    }),
-    tokenBucket({
-      mode: "LIVE",
-      refillRate: 5, // Refill 5 tokens per interval
-      interval: 10, // Refill every 10 seconds
-      capacity: 10, // Bucket capacity of 10 tokens
-    }),
-  ],
-});
+const arcjectMiddleware = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const decision = await aj.protect(req, { requested: 1 });
+    if (decision.isDenied()) {
+      if (decision.reason.isBot()) res.status(403).send({ error: "Bot detected" });
+      if (decision.reason.isRateLimit()) res.status(429).send({ error: "Rate limit exceeded" });
 
-export default aj;
+      res.status(403).send({ error: "Access denied" });
+      return;
+    }
+
+    next();
+  } catch (error) {
+    console.log("arcjectMiddleware error", error);
+    next(error);
+  }
+};
+
+export default arcjectMiddleware;

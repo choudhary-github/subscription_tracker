@@ -7,12 +7,14 @@ import { connectDB } from "./database/mongodb";
 import "dotenv/config";
 import errorMiddleware from "./middleware/error.middleware";
 import cookieParser from "cookie-parser";
+import arcjectMiddleware from "./middleware/arcjet.middleware";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(arcjectMiddleware);
 
 const apiRouter = Router();
 
@@ -25,7 +27,7 @@ apiRouter.use("/users", userRouter);
 apiRouter.use("/subscriptions", subscriptionRouter);
 
 app.use("/api/v1", apiRouter);
-app.use(errorMiddleware)
+app.use(errorMiddleware);
 
 app.listen(PORT, async () => {
   try {
