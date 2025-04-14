@@ -2,6 +2,9 @@
   "name": "subscription_tracker",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "start": "bun --hot index.ts"
+  },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/bun": "latest",
