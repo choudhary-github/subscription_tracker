@@ -3,23 +3,30 @@ import Subscription from "../models/subscription.model";
 
 const createSubscription = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { data } = req.body;
+    if (!req.user) {
+      res.status(401).json({
+        status: "fail",
+        message: "Unauthorized",
+      });
+      return;
+    }
 
-    if (!data) {
-      res.status(400).json({ error: "Subscription is required" });
+    if (!req.body) {
+      res.status(400).json({
+        status: "fail",
+        message: "Please provide a subscription",
+      });
       return;
     }
 
     const subscription = await Subscription.create({
-      ...data,
+      ...req.body,
       user: req.user._id,
     });
 
     res.status(201).json({
       status: "success",
-      data: {
-        ...subscription,
-      },
+      data: subscription,
     });
     return;
   } catch (error) {
