@@ -8,6 +8,7 @@ import "dotenv/config";
 import errorMiddleware from "./middleware/error.middleware";
 import cookieParser from "cookie-parser";
 import arcjectMiddleware from "./middleware/arcjet.middleware";
+import workflowRouter from "./routes/workflow.route";
 
 const app = express();
 
@@ -25,6 +26,7 @@ apiRouter.get("/", (req: Request, res: Response) => {
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/users", userRouter);
 apiRouter.use("/subscriptions", subscriptionRouter);
+apiRouter.use("/workflows", workflowRouter);
 
 app.use("/api/v1", apiRouter);
 app.use(errorMiddleware);

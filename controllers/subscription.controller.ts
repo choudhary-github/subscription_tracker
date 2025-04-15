@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import Subscription from "../models/subscription.model";
+import { workflowClient } from "../config/upstash";
+import { QSTASH_URL, SERVER_URL } from "../config/env";
 
 const createSubscription = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -24,9 +26,20 @@ const createSubscription = async (req: Request, res: Response, next: NextFunctio
       user: req.user._id,
     });
 
+    const { workflowRunId } = await workflowClient.trigger({
+      url: `${SERVER_URL}/api/v1/workflows/subscription/reminder`,
+      body: {
+        subscriptionId: subscription._id,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+      retries: 0,
+    });
+
     res.status(201).json({
       status: "success",
-      data: subscription,
+      data: { subscription, workflowRunId },
     });
     return;
   } catch (error) {
