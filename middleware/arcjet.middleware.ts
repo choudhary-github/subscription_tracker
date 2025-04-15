@@ -3,6 +3,7 @@ import aj from "../config/arcjet";
 
 const arcjectMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log("arcjectMiddleware", req.method, req.path, req.ip);
     const decision = await aj.protect(req, { requested: 5 });
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
@@ -16,10 +17,7 @@ const arcjectMiddleware = async (req: Request, res: Response, next: NextFunction
         return;
       }
     }
-    // else if (decision.results.some(isSpoofedBot)) {
-    //   res.status(403).send({ error: "Forbidden" });
-    //   return;
-    // }
+
     next();
   } catch (error) {
     console.log("arcjectMiddleware error", error);

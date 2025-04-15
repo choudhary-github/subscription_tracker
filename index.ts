@@ -20,7 +20,7 @@ app.use(arcjectMiddleware);
 const apiRouter = Router();
 
 apiRouter.get("/", (req: Request, res: Response) => {
-  res.send("hello world hello");
+  res.send("hello world");
 });
 
 apiRouter.use("/auth", authRouter);
