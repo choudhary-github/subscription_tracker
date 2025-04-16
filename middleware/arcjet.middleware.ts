@@ -3,13 +3,13 @@ import aj from "../config/arcjet";
 
 const arcjectMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   console.log(req.url, req.method, req.ip, "form arcjet middleware");
-
   try {
     const decision = await aj.protect(req, { requested: 10 });
+    console.log("arcjet decision id and conclusion", decision.id, decision.conclusion);
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
         res.status(429).send({ error: "Too Many Requests" });
-        console.log("Rate limit exceeded", decision.reason);
+        // console.log("Rate limit exceeded", decision.reason);
         return;
       } else if (decision.reason.isBot()) {
         res.status(403).send({ error: "No bots allowed" });
