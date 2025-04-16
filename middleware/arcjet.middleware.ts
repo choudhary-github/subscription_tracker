@@ -2,6 +2,8 @@ import type { Request, Response, NextFunction } from "express";
 import aj from "../config/arcjet";
 
 const arcjectMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.url, req.method, req.ip);
+
   try {
     const decision = await aj.protect(req, { requested: 5 });
     if (decision.isDenied()) {

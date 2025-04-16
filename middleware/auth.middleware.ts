@@ -4,6 +4,7 @@ import { JWT_SECRET } from "../config/env";
 import User from "../models/user.model";
 
 const authorize = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.url, req.method, req.ip);
   try {
     let token;
 
