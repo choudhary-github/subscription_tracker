@@ -17,11 +17,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(arcjectMiddleware);
 
+app.set('trust proxy', true);
+
 const apiRouter = Router();
 
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("hello world");
 });
+
+apiRouter.get("/ip", (req, res) => {
+  res.json({
+    ip: req.ip,
+    forwarded: req.headers['x-forwarded-for'],
+  });
+});
+
 
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/users", userRouter);
