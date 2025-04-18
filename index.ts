@@ -17,8 +17,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(arcjectMiddleware);
 
-app.set('trust proxy', true);
-
 const apiRouter = Router();
 
 apiRouter.get("/", (req: Request, res: Response) => {
