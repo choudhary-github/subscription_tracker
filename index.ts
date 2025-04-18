@@ -19,6 +19,8 @@ app.use(arcjectMiddleware);
 
 const apiRouter = Router();
 
+app.set("trust proxy", true);
+
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("hello world");
 });
